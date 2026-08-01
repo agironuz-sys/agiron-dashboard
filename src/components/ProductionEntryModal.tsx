@@ -193,8 +193,9 @@ export function ProductionEntryModal({
                   </select>
                   <input
                     type="number"
-                    value={row.quantity}
-                    onChange={(e) => updateRow(row.key, { quantity: Number(e.target.value) })}
+                    value={row.quantity === 0 ? "" : row.quantity}
+                    onChange={(e) => updateRow(row.key, { quantity: e.target.value === "" ? 0 : Number(e.target.value) })}
+                    placeholder="0"
                     className="w-20 rounded-lg border px-2 py-1.5 text-[13px] outline-none"
                     style={{ borderColor: "var(--border)", background: "var(--bg)", color: "var(--ink)" }}
                   />

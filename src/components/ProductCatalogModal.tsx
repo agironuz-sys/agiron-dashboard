@@ -2,7 +2,6 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import type { Material, ProductionMaterialLine, ProductRecipe } from "../lib/types";
 import { IconClose, IconPlus } from "./icons";
-import { ToggleSwitch } from "./ToggleSwitch";
 
 interface Row extends ProductionMaterialLine {
   key: number;
@@ -111,25 +110,15 @@ export function ProductCatalogModal({
                     </select>
                     <input
                       type="number"
-                      value={row.quantity}
-                      onChange={(e) => updateRow(row.key, { quantity: Number(e.target.value) })}
+                      value={row.quantity === 0 ? "" : row.quantity}
+                      onChange={(e) => updateRow(row.key, { quantity: e.target.value === "" ? 0 : Number(e.target.value) })}
+                      placeholder="0"
                       className="w-20 rounded-lg border px-2 py-1.5 text-[13px] outline-none"
                       style={{ borderColor: "var(--border)", background: "var(--bg)", color: "var(--ink)" }}
                     />
                     <button onClick={() => removeRow(row.key)} style={{ color: "var(--ink-faint)" }} aria-label="O'chirish">
                       <IconClose size={13} />
                     </button>
-                  </div>
-                  <div className="mt-2">
-                    <ToggleSwitch
-                      size="sm"
-                      value={row.source}
-                      onChange={(source) => updateRow(row.key, { source })}
-                      options={[
-                        { value: "company", label: "Ombordan" },
-                        { value: "client", label: "Mijozniki" },
-                      ]}
-                    />
                   </div>
                 </div>
               ))}

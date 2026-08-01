@@ -18,10 +18,10 @@ export function MaterialStockModal({
   const hasMaterials = materials.length > 0;
   const [mode, setMode] = useState<"existing" | "new">(hasMaterials ? "existing" : "new");
   const [materialId, setMaterialId] = useState(materials[0]?.id || "");
-  const [addQuantity, setAddQuantity] = useState("0");
+  const [addQuantity, setAddQuantity] = useState("");
   const [name, setName] = useState("");
   const [unit, setUnit] = useState("");
-  const [initialQuantity, setInitialQuantity] = useState("0");
+  const [initialQuantity, setInitialQuantity] = useState("");
 
   function handleSubmit() {
     if (mode === "existing") {
