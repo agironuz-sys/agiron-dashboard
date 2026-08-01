@@ -72,6 +72,17 @@ function App() {
     api.deleteTask(taskId).catch((e) => console.error("deleteTask failed:", e));
   }
 
+  async function handleTaskCreate(input: {
+    createdBy: string;
+    assigneeId: string;
+    description: string;
+    deadlineIso: string;
+    deadlineDisplay: string;
+  }) {
+    const task = await api.createTask(input);
+    setTasks((prev) => [task, ...prev]);
+  }
+
   return (
     <div style={{ background: "var(--bg)", minHeight: "100%" }}>
       <Header activeTab={activeTab} theme={theme} onThemeChange={setTheme} />
@@ -93,6 +104,7 @@ function App() {
           onChecklistChange={handleChecklistChange}
           onTaskUpdate={handleTaskUpdate}
           onTaskDelete={handleTaskDelete}
+          onTaskCreate={handleTaskCreate}
         />
       ) : activeTab === "products" ? (
         <MahsulotlarPage employees={employees} />

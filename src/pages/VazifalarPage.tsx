@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import type { ChecklistItem, Employee, Task, TaskStatus } from "../lib/types";
 import { TaskCard } from "../components/TaskCard";
+import { TaskCreateModal } from "../components/TaskCreateModal";
+import { IconPlus } from "../components/icons";
 
 export function VazifalarPage({
   tasks,
@@ -8,6 +10,7 @@ export function VazifalarPage({
   onChecklistChange,
   onTaskUpdate,
   onTaskDelete,
+  onTaskCreate,
 }: {
   tasks: Task[];
   employees: Employee[];
@@ -24,8 +27,16 @@ export function VazifalarPage({
     }
   ) => void;
   onTaskDelete: (taskId: string) => void;
+  onTaskCreate: (input: {
+    createdBy: string;
+    assigneeId: string;
+    description: string;
+    deadlineIso: string;
+    deadlineDisplay: string;
+  }) => void;
 }) {
   const [filter, setFilter] = useState<string>("all");
+  const [createOpen, setCreateOpen] = useState(false);
   const employeeById = useMemo(() => new Map(employees.map((e) => [e.id, e])), [employees]);
 
   const grouped = useMemo(() => {
@@ -43,12 +54,25 @@ export function VazifalarPage({
 
   return (
     <div className="mx-auto max-w-6xl px-6 pb-[220px] pt-10">
-      <h1 className="font-heading text-[30px] font-semibold" style={{ color: "var(--ink)" }}>
-        Vazifalar
-      </h1>
-      <p className="mt-1 text-[14px]" style={{ color: "var(--ink-soft)" }}>
-        Har bir xodimning vazifalari ro'yxati
-      </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="font-heading text-[30px] font-semibold" style={{ color: "var(--ink)" }}>
+            Vazifalar
+          </h1>
+          <p className="mt-1 text-[14px]" style={{ color: "var(--ink-soft)" }}>
+            Har bir xodimning vazifalari ro'yxati
+          </p>
+        </div>
+
+        <button
+          onClick={() => setCreateOpen(true)}
+          className="font-heading flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-white"
+          style={{ background: "var(--accent)" }}
+          aria-label="Yangi vazifa"
+        >
+          <IconPlus size={14} /> Yangi vazifa
+        </button>
+      </div>
 
       <div className="mt-5 flex gap-2 overflow-x-auto">
         <FilterChip label="Hammasi" active={filter === "all"} onClick={() => setFilter("all")} />
@@ -94,6 +118,17 @@ export function VazifalarPage({
           ))
         )}
       </div>
+
+      {createOpen && (
+        <TaskCreateModal
+          employees={employees}
+          onClose={() => setCreateOpen(false)}
+          onSave={(input) => {
+            onTaskCreate(input);
+            setCreateOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

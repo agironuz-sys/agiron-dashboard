@@ -52,6 +52,14 @@ async function del(path: string): Promise<void> {
   }
 }
 
+export interface TaskCreateInput {
+  createdBy: string;
+  assigneeId: string;
+  description: string;
+  deadlineIso?: string;
+  deadlineDisplay?: string;
+}
+
 export interface TaskPatch {
   assigneeId?: string;
   description?: string;
@@ -71,6 +79,7 @@ export interface ProductionEntryInput {
 export const api = {
   getEmployees: () => getJson<Employee[]>("/api/employees"),
   getTasks: () => getJson<Task[]>("/api/tasks"),
+  createTask: (input: TaskCreateInput) => postJson<Task>("/api/tasks", input),
   getTodayReport: () => getJson<TodayReport>("/api/report/today"),
   updateChecklist: (taskId: string, checklist: ChecklistItem[]) =>
     patchJson(`/api/tasks/${taskId}/checklist`, { checklist }),
