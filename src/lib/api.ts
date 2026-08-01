@@ -2,6 +2,7 @@ import type {
   ChecklistItem,
   Employee,
   Material,
+  MaterialMovement,
   ProductionEntry,
   ProductionMaterialLine,
   ProductRecipe,
@@ -81,6 +82,7 @@ export const api = {
     postJson<Material>("/api/materials", input),
   addMaterialStock: (materialId: string, addQuantity: number) =>
     patchJson<Material>(`/api/materials/${materialId}`, { addQuantity }),
+  getMaterialMovements: (materialId: string) => getJson<MaterialMovement[]>(`/api/materials/${materialId}/movements`),
 
   getProducts: () => getJson<ProductRecipe[]>("/api/products"),
 

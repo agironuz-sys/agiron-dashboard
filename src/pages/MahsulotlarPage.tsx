@@ -3,13 +3,7 @@ import { api } from "../lib/api";
 import type { Employee, Material, ProductionEntry, ProductionMaterialLine, ProductRecipe } from "../lib/types";
 import { ProductionEntryModal } from "../components/ProductionEntryModal";
 import { IconPlus, IconTrash } from "../components/icons";
-
-function formatDate(iso: string): string {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("uz-UZ", { day: "2-digit", month: "2-digit", year: "numeric" });
-}
+import { formatTashkentDateTime } from "../lib/format";
 
 function initials(name: string): string {
   return name
@@ -128,7 +122,7 @@ export function MahsulotlarPage({ employees }: { employees: Employee[] }) {
               </div>
 
               <div className="mt-1.5 text-[11.5px]" style={{ color: "var(--ink-faint)" }}>
-                Berilgan: {formatDate(entry.createdAt)}
+                Berilgan: {formatTashkentDateTime(entry.createdAt)}
               </div>
 
               <div className="mt-3 space-y-1.5">

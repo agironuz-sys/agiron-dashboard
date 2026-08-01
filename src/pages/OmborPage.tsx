@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { api } from "../lib/api";
 import type { Material } from "../lib/types";
 import { MaterialStockModal } from "../components/MaterialStockModal";
+import { MaterialHistoryModal } from "../components/MaterialHistoryModal";
 import { IconPlus } from "../components/icons";
 
 export function OmborPage() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [historyMaterial, setHistoryMaterial] = useState<Material | null>(null);
 
   async function load() {
     try {
@@ -71,9 +73,10 @@ export function OmborPage() {
           </div>
         ) : (
           materials.map((m, i) => (
-            <div
+            <button
               key={m.id}
-              className="flex items-center justify-between px-5 py-4"
+              onClick={() => setHistoryMaterial(m)}
+              className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-[var(--surface-2)]"
               style={{ borderTop: i > 0 ? "1px solid var(--border)" : "none" }}
             >
               <div>
@@ -90,7 +93,7 @@ export function OmborPage() {
               >
                 {m.quantity} {m.unit}
               </div>
-            </div>
+            </button>
           ))
         )}
       </div>
@@ -102,6 +105,10 @@ export function OmborPage() {
           onAddStock={handleAddStock}
           onCreate={handleCreate}
         />
+      )}
+
+      {historyMaterial && (
+        <MaterialHistoryModal material={historyMaterial} onClose={() => setHistoryMaterial(null)} />
       )}
     </div>
   );

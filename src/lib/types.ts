@@ -73,3 +73,13 @@ export interface ProductionEntry {
   createdBy: string;
   createdAt: string;
 }
+
+export interface MaterialMovement {
+  id: string;
+  materialId: string;
+  changeType: "initial" | "add" | "usage";
+  quantityDelta: number;
+  note: string;
+  actor: string;
+  createdAt: string;
+}
