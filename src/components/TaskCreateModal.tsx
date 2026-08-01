@@ -22,18 +22,19 @@ export function TaskCreateModal({
   const [createdBy, setCreatedBy] = useState(employees[0]?.id || "");
   const [assigneeId, setAssigneeId] = useState(employees[0]?.id || "");
   const [dateInput, setDateInput] = useState("");
+  const [timeInput, setTimeInput] = useState("18:00");
 
   function handleSave() {
     if (!description.trim() || !assigneeId) return;
     let deadlineIso = "";
     let deadlineDisplay = "";
     if (dateInput) {
-      deadlineIso = `${dateInput}T18:00:00`;
-      deadlineDisplay = new Date(deadlineIso).toLocaleDateString("uz-UZ", {
+      deadlineIso = `${dateInput}T${timeInput || "18:00"}:00`;
+      deadlineDisplay = `${new Date(deadlineIso).toLocaleDateString("uz-UZ", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
-      });
+      })}, ${timeInput || "18:00"}`;
     }
     onSave({ createdBy, assigneeId, description: description.trim(), deadlineIso, deadlineDisplay });
   }
@@ -65,7 +66,7 @@ export function TaskCreateModal({
           />
         </Field>
 
-        <div className="mt-3 grid grid-cols-2 gap-3">
+        <div className="mt-3">
           <Field label="Kimga">
             <select
               value={assigneeId}
@@ -80,12 +81,25 @@ export function TaskCreateModal({
               ))}
             </select>
           </Field>
-          <Field label="Muddat (ixtiyoriy)">
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <Field label="Muddat sanasi (ixtiyoriy)">
             <input
               type="date"
               value={dateInput}
               onChange={(e) => setDateInput(e.target.value)}
               className="w-full rounded-lg border px-3 py-2 text-[13.5px] outline-none"
+              style={{ borderColor: "var(--border)", background: "var(--bg)", color: "var(--ink)" }}
+            />
+          </Field>
+          <Field label="Vaqti">
+            <input
+              type="time"
+              value={timeInput}
+              onChange={(e) => setTimeInput(e.target.value)}
+              disabled={!dateInput}
+              className="w-full rounded-lg border px-3 py-2 text-[13.5px] outline-none disabled:opacity-50"
               style={{ borderColor: "var(--border)", background: "var(--bg)", color: "var(--ink)" }}
             />
           </Field>

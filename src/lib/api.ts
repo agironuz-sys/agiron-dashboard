@@ -92,6 +92,7 @@ export const api = {
   addMaterialStock: (materialId: string, addQuantity: number) =>
     patchJson<Material>(`/api/materials/${materialId}`, { addQuantity }),
   getMaterialMovements: (materialId: string) => getJson<MaterialMovement[]>(`/api/materials/${materialId}/movements`),
+  deleteMaterial: (materialId: string) => del(`/api/materials/${materialId}`),
 
   getProducts: () => getJson<ProductRecipe[]>("/api/products"),
 

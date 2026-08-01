@@ -3,7 +3,7 @@ import { api } from "../lib/api";
 import type { Material } from "../lib/types";
 import { MaterialStockModal } from "../components/MaterialStockModal";
 import { MaterialHistoryModal } from "../components/MaterialHistoryModal";
-import { IconPlus } from "../components/icons";
+import { IconPlus, IconTrash } from "../components/icons";
 
 export function OmborPage() {
   const [materials, setMaterials] = useState<Material[]>([]);
@@ -35,6 +35,12 @@ export function OmborPage() {
     await api.createMaterial(input);
     setModalOpen(false);
     load();
+  }
+
+  async function handleDelete(id: string) {
+    if (!window.confirm("Bu xomashyoni o'chirishni tasdiqlaysizmi?")) return;
+    setMaterials((prev) => prev.filter((m) => m.id !== id));
+    api.deleteMaterial(id).catch((e) => console.error("deleteMaterial failed:", e));
   }
 
   return (
@@ -73,13 +79,16 @@ export function OmborPage() {
           </div>
         ) : (
           materials.map((m, i) => (
-            <button
+            <div
               key={m.id}
+              role="button"
+              tabIndex={0}
               onClick={() => setHistoryMaterial(m)}
-              className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-[var(--surface-2)]"
+              onKeyDown={(e) => e.key === "Enter" && setHistoryMaterial(m)}
+              className="flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-4 text-left transition-colors hover:bg-[var(--surface-2)]"
               style={{ borderTop: i > 0 ? "1px solid var(--border)" : "none" }}
             >
-              <div>
+              <div className="min-w-0 flex-1">
                 <div className="text-[13.5px] font-medium" style={{ color: "var(--ink)" }}>
                   {m.name}
                 </div>
@@ -93,7 +102,17 @@ export function OmborPage() {
               >
                 {m.quantity} {m.unit}
               </div>
-            </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(m.id);
+                }}
+                aria-label="O'chirish"
+                style={{ color: "var(--ink-faint)" }}
+              >
+                <IconTrash />
+              </button>
+            </div>
           ))
         )}
       </div>

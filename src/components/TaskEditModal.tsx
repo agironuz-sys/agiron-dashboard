@@ -17,6 +17,12 @@ function isoToDateInput(iso: string): string {
   return d.toISOString().slice(0, 10);
 }
 
+function isoToTimeInput(iso: string): string {
+  if (!iso) return "18:00";
+  const match = iso.match(/T(\d{2}:\d{2})/);
+  return match ? match[1] : "18:00";
+}
+
 export function TaskEditModal({
   task,
   employees,
@@ -39,6 +45,7 @@ export function TaskEditModal({
   const [assigneeId, setAssigneeId] = useState(task.assigneeId);
   const [status, setStatus] = useState<TaskStatus>(task.status);
   const [dateInput, setDateInput] = useState(isoToDateInput(task.deadlineIso));
+  const [timeInput, setTimeInput] = useState(isoToTimeInput(task.deadlineIso));
   const [checklist, setChecklist] = useState<ChecklistItem[]>(task.checklist || []);
 
   function updateItemText(i: number, text: string) {
@@ -55,12 +62,12 @@ export function TaskEditModal({
     let deadlineIso = "";
     let deadlineDisplay = "";
     if (dateInput) {
-      deadlineIso = `${dateInput}T18:00:00`;
-      deadlineDisplay = new Date(deadlineIso).toLocaleDateString("uz-UZ", {
+      deadlineIso = `${dateInput}T${timeInput || "18:00"}:00`;
+      deadlineDisplay = `${new Date(deadlineIso).toLocaleDateString("uz-UZ", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
-      });
+      })}, ${timeInput || "18:00"}`;
     }
     onSave({
       description,
@@ -116,12 +123,25 @@ export function TaskEditModal({
               ))}
             </select>
           </Field>
-          <Field label="Muddat">
+          <Field label="Muddat sanasi">
             <input
               type="date"
               value={dateInput}
               onChange={(e) => setDateInput(e.target.value)}
               className="w-full rounded-lg border px-3 py-2 text-[13.5px] outline-none"
+              style={{ borderColor: "var(--border)", background: "var(--bg)", color: "var(--ink)" }}
+            />
+          </Field>
+        </div>
+
+        <div className="mt-3">
+          <Field label="Muddat vaqti">
+            <input
+              type="time"
+              value={timeInput}
+              onChange={(e) => setTimeInput(e.target.value)}
+              disabled={!dateInput}
+              className="w-full rounded-lg border px-3 py-2 text-[13.5px] outline-none disabled:opacity-50"
               style={{ borderColor: "var(--border)", background: "var(--bg)", color: "var(--ink)" }}
             />
           </Field>
