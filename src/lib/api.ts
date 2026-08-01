@@ -95,6 +95,9 @@ export const api = {
   deleteMaterial: (materialId: string) => del(`/api/materials/${materialId}`),
 
   getProducts: () => getJson<ProductRecipe[]>("/api/products"),
+  saveProduct: (input: { productName: string; materials: ProductionMaterialLine[] }) =>
+    postJson<ProductRecipe>("/api/products", input),
+  deleteProduct: (productName: string) => del(`/api/products/${encodeURIComponent(productName)}`),
 
   getProduction: () => getJson<ProductionEntry[]>("/api/production"),
   createProduction: (input: ProductionEntryInput) => postJson<ProductionEntry>("/api/production", input),
