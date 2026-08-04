@@ -97,25 +97,36 @@ export function EmployeeModal({
                   {employee.telegramChatId ? "Ulangan" : "Hali ulanmagan"}
                 </span>
               </div>
-              <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
-                Bu shaxsiy havolani {employee.name}ga yuboring — u havolani ochib botni bossagina, tizim uni
-                avtomatik tanib oladi, hech narsa nusxalab yuborish shart emas.
-              </p>
-              <div className="mt-2 flex items-center gap-2">
-                <div
-                  className="min-w-0 flex-1 truncate rounded-lg border px-2.5 py-1.5 text-[12px]"
-                  style={{ borderColor: "var(--border)", background: "var(--surface)", color: "var(--ink)" }}
-                >
-                  {inviteLink}
-                </div>
-                <button
-                  onClick={handleCopy}
-                  className="font-heading shrink-0 rounded-lg px-3 py-1.5 text-[12px] font-semibold text-white"
-                  style={{ background: "var(--accent)" }}
-                >
-                  {copied ? "Nusxalandi!" : "Nusxalash"}
-                </button>
-              </div>
+
+              {employee.id === "gayrat" && employee.telegramChatId ? (
+                <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
+                  🔒 Rahbar profili allaqachon ulangan. Xavfsizlik uchun havola faqat bir marta ishlaydi va
+                  qayta ishlatib bo'lmaydi — hatto kimdir uni topib olsa ham, rahbar huquqini ololmaydi. Qayta
+                  ulash kerak bo'lsa (masalan, telefon almashtirilganda), dasturchiga murojaat qiling.
+                </p>
+              ) : (
+                <>
+                  <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
+                    Bu shaxsiy havolani {employee.name}ga yuboring — u havolani ochib botni bossagina, tizim uni
+                    avtomatik tanib oladi, hech narsa nusxalab yuborish shart emas.
+                  </p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <div
+                      className="min-w-0 flex-1 truncate rounded-lg border px-2.5 py-1.5 text-[12px]"
+                      style={{ borderColor: "var(--border)", background: "var(--surface)", color: "var(--ink)" }}
+                    >
+                      {inviteLink}
+                    </div>
+                    <button
+                      onClick={handleCopy}
+                      className="font-heading shrink-0 rounded-lg px-3 py-1.5 text-[12px] font-semibold text-white"
+                      style={{ background: "var(--accent)" }}
+                    >
+                      {copied ? "Nusxalandi!" : "Nusxalash"}
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </Field>
         )}
