@@ -44,6 +44,12 @@ export function ProductionEntryModal({
   const [quantityProduced, setQuantityProduced] = useState("1");
   const [createdBy, setCreatedBy] = useState(employees[0]?.id || "");
   const [rows, setRows] = useState<Row[]>([]);
+  // The catalog recipe is defined per 1 unit. As long as the rows still match
+  // that recipe untouched, they're kept scaled to the current "Necha dona" —
+  // any manual edit to a row switches this off so we stop overwriting the
+  // user's own numbers.
+  const [recipePerUnit, setRecipePerUnit] = useState<ProductionMaterialLine[] | null>(null);
+  const [rowsAutoScaled, setRowsAutoScaled] = useState(false);
 
   const suggestions = useMemo(() => {
     const q = productName.trim().toLowerCase();
@@ -51,16 +57,33 @@ export function ProductionEntryModal({
     return recipes.filter((r) => r.productName.toLowerCase().includes(q)).slice(0, 8);
   }, [productName, recipes]);
 
+  function scaleRecipe(recipe: ProductionMaterialLine[], qty: number): Row[] {
+    return recipe.map((m) => ({ ...m, quantity: m.quantity * qty, key: rowKeySeq++ }));
+  }
+
   function selectProduct(name: string) {
     setProductName(name);
     setShowSuggestions(false);
     const recipe = recipes.find((r) => r.productName === name);
     if (recipe) {
-      setRows(recipe.materials.map((m) => ({ ...m, key: rowKeySeq++ })));
+      setRecipePerUnit(recipe.materials);
+      setRowsAutoScaled(true);
+      setRows(scaleRecipe(recipe.materials, Number(quantityProduced) || 1));
+    } else {
+      setRecipePerUnit(null);
+      setRowsAutoScaled(false);
+    }
+  }
+
+  function handleQuantityChange(value: string) {
+    setQuantityProduced(value);
+    if (recipePerUnit && rowsAutoScaled) {
+      setRows(scaleRecipe(recipePerUnit, Number(value) || 0));
     }
   }
 
   function updateRow(key: number, patch: Partial<Row>) {
+    setRowsAutoScaled(false);
     setRows((prev) => prev.map((r) => (r.key === key ? { ...r, ...patch } : r)));
   }
 
@@ -70,10 +93,12 @@ export function ProductionEntryModal({
   }
 
   function removeRow(key: number) {
+    setRowsAutoScaled(false);
     setRows((prev) => prev.filter((r) => r.key !== key));
   }
 
   function addRow() {
+    setRowsAutoScaled(false);
     setRows((prev) => [...prev, newRow(materials)]);
   }
 
@@ -110,6 +135,8 @@ export function ProductionEntryModal({
               onChange={(e) => {
                 setProductName(e.target.value);
                 setShowSuggestions(true);
+                setRecipePerUnit(null);
+                setRowsAutoScaled(false);
               }}
               onFocus={() => setShowSuggestions(true)}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
@@ -145,7 +172,7 @@ export function ProductionEntryModal({
             <input
               type="number"
               value={quantityProduced}
-              onChange={(e) => setQuantityProduced(e.target.value)}
+              onChange={(e) => handleQuantityChange(e.target.value)}
               className="w-full rounded-lg border px-3 py-2 text-[13.5px] outline-none"
               style={{ borderColor: "var(--border)", background: "var(--bg)", color: "var(--ink)" }}
             />
@@ -168,7 +195,7 @@ export function ProductionEntryModal({
 
         <div className="mt-4">
           <div className="mb-1.5 text-[12px] font-medium" style={{ color: "var(--ink-soft)" }}>
-            Sarflangan xomashyo
+            Sarflangan xomashyo{recipePerUnit && rowsAutoScaled ? ` (${quantityProduced || 1} dona uchun avtomatik)` : ""}
           </div>
           {materials.length === 0 ? (
             <div className="text-[12.5px]" style={{ color: "var(--ink-faint)" }}>

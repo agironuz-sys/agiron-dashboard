@@ -85,7 +85,7 @@ export function ProductCatalogModal({
 
         <div className="mt-4">
           <div className="mb-1.5 text-[12px] font-medium" style={{ color: "var(--ink-soft)" }}>
-            Retsept (nechta xomashyo ketadi)
+            Retsept (1 dona uchun nechta xomashyo ketadi)
           </div>
           {materials.length === 0 ? (
             <div className="text-[12.5px]" style={{ color: "var(--ink-faint)" }}>

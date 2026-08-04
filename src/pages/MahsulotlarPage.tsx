@@ -93,7 +93,9 @@ export function MahsulotlarPage({ employees }: { employees: Employee[] }) {
             Mahsulotlar
           </h1>
           <p className="mt-1 text-[14px]" style={{ color: "var(--ink-soft)" }}>
-            {tab === "catalog" ? "Kompaniya mahsulotlari katalogi" : "Ishlab chiqarish tarixi va sarflangan xomashyo"}
+            {tab === "catalog"
+              ? "Kompaniya mahsulotlari katalogi (retsept 1 dona uchun)"
+              : "Ishlab chiqarish tarixi va sarflangan xomashyo"}
           </p>
         </div>
 
