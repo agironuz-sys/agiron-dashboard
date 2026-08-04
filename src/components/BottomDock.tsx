@@ -60,6 +60,18 @@ const ITEMS: DockItem[] = [
       </svg>
     ),
   },
+  {
+    key: "team",
+    label: "Jamoa",
+    icon: (
+      <svg {...ICON_PROPS}>
+        <circle cx="9" cy="8" r="3.2" />
+        <path d="M3.5 20c0-3.3 2.5-5.8 5.5-5.8s5.5 2.5 5.5 5.8" />
+        <path d="M16 5.3c1.5.4 2.6 1.8 2.6 3.4 0 1.6-1.1 3-2.6 3.4" />
+        <path d="M15.5 14.4c2.7.3 4.9 2.6 4.9 5.6" />
+      </svg>
+    ),
+  },
 ];
 
 export function BottomDock({ active, onChange }: { active: string; onChange: (key: string) => void }) {

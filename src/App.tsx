@@ -5,7 +5,9 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { VazifalarPage } from "./pages/VazifalarPage";
 import { MahsulotlarPage } from "./pages/MahsulotlarPage";
 import { OmborPage } from "./pages/OmborPage";
+import { JamoaPage } from "./pages/JamoaPage";
 import { api } from "./lib/api";
+import type { EmployeeInput } from "./lib/api";
 import type { ChecklistItem, Employee, Task, TaskStatus } from "./lib/types";
 
 type Theme = "light" | "dark";
@@ -83,6 +85,21 @@ function App() {
     setTasks((prev) => [task, ...prev]);
   }
 
+  async function handleEmployeeCreate(input: EmployeeInput) {
+    const employee = await api.createEmployee(input);
+    setEmployees((prev) => [...prev, employee]);
+  }
+
+  async function handleEmployeeUpdate(id: string, input: EmployeeInput) {
+    const employee = await api.updateEmployee(id, input);
+    setEmployees((prev) => prev.map((e) => (e.id === id ? employee : e)));
+  }
+
+  async function handleEmployeeDelete(id: string) {
+    setEmployees((prev) => prev.filter((e) => e.id !== id));
+    api.deleteEmployee(id).catch((e) => console.error("deleteEmployee failed:", e));
+  }
+
   return (
     <div style={{ background: "var(--bg)", minHeight: "100%" }}>
       <Header activeTab={activeTab} theme={theme} onThemeChange={setTheme} />
@@ -108,8 +125,15 @@ function App() {
         />
       ) : activeTab === "products" ? (
         <MahsulotlarPage employees={employees} />
-      ) : (
+      ) : activeTab === "warehouse" ? (
         <OmborPage />
+      ) : (
+        <JamoaPage
+          employees={employees}
+          onCreate={handleEmployeeCreate}
+          onUpdate={handleEmployeeUpdate}
+          onDelete={handleEmployeeDelete}
+        />
       )}
 
       <BottomDock active={activeTab} onChange={setActiveTab} />

@@ -76,8 +76,18 @@ export interface ProductionEntryInput {
   materials: ProductionMaterialLine[];
 }
 
+export interface EmployeeInput {
+  name: string;
+  role: string;
+  responsibilities: string;
+  telegramChatId?: string;
+}
+
 export const api = {
   getEmployees: () => getJson<Employee[]>("/api/employees"),
+  createEmployee: (input: EmployeeInput) => postJson<Employee>("/api/employees", input),
+  updateEmployee: (id: string, patch: Partial<EmployeeInput>) => patchJson<Employee>(`/api/employees/${id}`, patch),
+  deleteEmployee: (id: string) => del(`/api/employees/${id}`),
   getTasks: () => getJson<Task[]>("/api/tasks"),
   createTask: (input: TaskCreateInput) => postJson<Task>("/api/tasks", input),
   getTodayReport: () => getJson<TodayReport>("/api/report/today"),
