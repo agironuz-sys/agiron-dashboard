@@ -4,6 +4,7 @@ import type { Employee } from "../lib/types";
 import { IconClose } from "./icons";
 
 const BOSS_BOT_USERNAME = "agironaiassistantbot";
+const NOTIFY_BOT_USERNAME = "agironeslatmabot";
 
 export function EmployeeModal({
   employee,
@@ -126,6 +127,45 @@ export function EmployeeModal({
                     </button>
                   </div>
                 </>
+              )}
+            </div>
+          </Field>
+        )}
+
+        {employee && (
+          <Field label="Eslatma bot (bildirishnomalar)">
+            <div className="rounded-lg border p-3" style={{ borderColor: "var(--border)", background: "var(--bg)" }}>
+              <span
+                className="rounded-full px-2.5 py-1 text-[11px] font-medium"
+                style={{
+                  background: employee.notifyConnected ? "var(--success-soft)" : "var(--surface-2)",
+                  color: employee.notifyConnected ? "var(--success)" : "var(--ink-faint)",
+                }}
+              >
+                {employee.notifyConnected ? "Ulangan" : "Hali ulanmagan"}
+              </span>
+
+              {!employee.telegramChatId ? (
+                <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
+                  Avval yuqoridagi asosiy botga ulaning — bu bot xodimni faqat shundan keyin taniydi.
+                </p>
+              ) : !employee.notifyConnected ? (
+                <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
+                  Yangi topshiriq va kunlik eslatmalar shu bot orqali keladi — lekin Telegram qoidasiga ko'ra bot
+                  birinchi bo'lib yozolmaydi. {employee.name} <a
+                    href={`https://t.me/${NOTIFY_BOT_USERNAME}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium underline"
+                    style={{ color: "var(--accent)" }}
+                  >
+                    @{NOTIFY_BOT_USERNAME}
+                  </a> ni ochib, bir marta Start bosishi kerak.
+                </p>
+              ) : (
+                <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
+                  Yangi topshiriqlar, kunlik eslatmalar va muddat o'tganda ogohlantirish shu botdan keladi.
+                </p>
               )}
             </div>
           </Field>

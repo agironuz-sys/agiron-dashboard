@@ -5,6 +5,7 @@ export interface Employee {
   role: string;
   responsibilities: string;
   inviteToken: string;
+  notifyConnected: boolean;
 }
 
 export type TaskStatus = "new" | "in_progress" | "done" | "overdue";
@@ -28,6 +29,8 @@ export interface Task {
   status: TaskStatus;
   completedAt: string;
   lastReminderAt: string;
+  morningNotifiedAt: string;
+  eveningCheckedAt: string;
   source: "voice" | "text" | "dashboard";
   checklist: ChecklistItem[];
 }

@@ -86,7 +86,7 @@ export function JamoaPage({
                     </div>
                   </div>
                 </div>
-                <div className="flex shrink-0 items-center gap-2">
+                <div className="flex shrink-0 items-center gap-1.5">
                   <span
                     className="rounded-full px-2.5 py-1 text-[10.5px] font-medium"
                     style={{
@@ -94,7 +94,16 @@ export function JamoaPage({
                       color: e.telegramChatId ? "var(--success)" : "var(--ink-faint)",
                     }}
                   >
-                    {e.telegramChatId ? "Botga ulangan" : "Botga ulanmagan"}
+                    {e.telegramChatId ? "Bot: ulangan" : "Bot: ulanmagan"}
+                  </span>
+                  <span
+                    className="rounded-full px-2.5 py-1 text-[10.5px] font-medium"
+                    style={{
+                      background: e.notifyConnected ? "var(--success-soft)" : "var(--surface-2)",
+                      color: e.notifyConnected ? "var(--success)" : "var(--ink-faint)",
+                    }}
+                  >
+                    {e.notifyConnected ? "Eslatma: ulangan" : "Eslatma: ulanmagan"}
                   </span>
                   {e.id !== "gayrat" && (
                     <button
