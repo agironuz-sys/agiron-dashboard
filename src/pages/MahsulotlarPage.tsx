@@ -158,19 +158,8 @@ export function MahsulotlarPage({ employees }: { employees: Employee[] }) {
                 </div>
                 <div className="mt-3 space-y-1.5">
                   {recipe.materials.map((m, i) => (
-                    <div key={i} className="flex items-center gap-2 text-[13px]" style={{ color: "var(--ink)" }}>
-                      <span className="flex-1">
-                        {m.materialName} — {m.quantity} {m.unit}
-                      </span>
-                      <span
-                        className="rounded-full px-2 py-0.5 text-[10.5px] font-medium"
-                        style={{
-                          background: m.source === "company" ? "var(--accent-soft)" : "var(--surface-2)",
-                          color: m.source === "company" ? "var(--accent)" : "var(--ink-soft)",
-                        }}
-                      >
-                        {m.source === "company" ? "Ombordan" : "Mijozniki"}
-                      </span>
+                    <div key={i} className="text-[13px]" style={{ color: "var(--ink)" }}>
+                      {m.materialName} — {m.quantity} {m.unit}
                     </div>
                   ))}
                 </div>
