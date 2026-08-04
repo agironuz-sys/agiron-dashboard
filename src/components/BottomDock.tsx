@@ -54,9 +54,9 @@ const ITEMS: DockItem[] = [
     label: "Ombor",
     icon: (
       <svg {...ICON_PROPS}>
-        <path d="M3 10 12 4l9 6" />
-        <path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9" />
-        <path d="M9 20v-6h6v6" />
+        <rect x="3" y="4" width="18" height="4.2" rx="1.2" />
+        <path d="M5 8.2V18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.2" />
+        <path d="M10 12.5h4" />
       </svg>
     ),
   },
