@@ -48,6 +48,8 @@ export function MahsulotlarPage({ employees }: { employees: Employee[] }) {
 
   useEffect(() => {
     load();
+    const interval = setInterval(load, 10_000);
+    return () => clearInterval(interval);
   }, []);
 
   function employeeName(id: string): string {

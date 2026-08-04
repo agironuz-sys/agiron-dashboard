@@ -23,6 +23,8 @@ export function OmborPage({ employees }: { employees: Employee[] }) {
 
   useEffect(() => {
     load();
+    const interval = setInterval(load, 10_000);
+    return () => clearInterval(interval);
   }, []);
 
   async function handleAddStock(materialId: string, addQuantity: number, actor: string) {

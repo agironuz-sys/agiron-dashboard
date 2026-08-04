@@ -12,8 +12,18 @@ import type { ChecklistItem, Employee, Task, TaskStatus } from "./lib/types";
 
 type Theme = "light" | "dark";
 
+const VALID_TABS = ["dashboard", "tasks", "products", "warehouse", "team"];
+
 function App() {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTabState] = useState(() => {
+    const fromHash = window.location.hash.slice(1);
+    return VALID_TABS.includes(fromHash) ? fromHash : "dashboard";
+  });
+
+  function setActiveTab(tab: string) {
+    setActiveTabState(tab);
+    window.location.hash = tab;
+  }
   const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem("theme") as Theme) || "light");
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -24,6 +34,15 @@ function App() {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    function onHashChange() {
+      const fromHash = window.location.hash.slice(1);
+      if (VALID_TABS.includes(fromHash)) setActiveTabState(fromHash);
+    }
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -42,7 +61,7 @@ function App() {
       }
     }
     load();
-    const interval = setInterval(load, 30_000);
+    const interval = setInterval(load, 10_000);
     return () => {
       cancelled = true;
       clearInterval(interval);
