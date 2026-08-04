@@ -9,6 +9,9 @@ export interface Employee {
 
 export type TaskStatus = "new" | "in_progress" | "done" | "overdue";
 
+/** Which surface an action was performed through — shown in history views. */
+export type ActivitySource = "bot" | "dashboard";
+
 export interface ChecklistItem {
   text: string;
   done: boolean;
@@ -25,7 +28,7 @@ export interface Task {
   status: TaskStatus;
   completedAt: string;
   lastReminderAt: string;
-  source: "voice" | "text";
+  source: "voice" | "text" | "dashboard";
   checklist: ChecklistItem[];
 }
 
@@ -73,6 +76,7 @@ export interface ProductionEntry {
   materials: ProductionMaterialLine[];
   createdBy: string;
   createdAt: string;
+  source: ActivitySource;
 }
 
 export interface MaterialMovement {
@@ -82,5 +86,6 @@ export interface MaterialMovement {
   quantityDelta: number;
   note: string;
   actor: string;
+  source: ActivitySource;
   createdAt: string;
 }

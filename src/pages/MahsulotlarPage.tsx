@@ -5,6 +5,7 @@ import { ProductionEntryModal } from "../components/ProductionEntryModal";
 import { ProductCatalogModal } from "../components/ProductCatalogModal";
 import { ToggleSwitch } from "../components/ToggleSwitch";
 import { IconPlus, IconTrash } from "../components/icons";
+import { SourceTag } from "../components/SourceTag";
 import { formatTashkentDateTime } from "../lib/format";
 
 function initials(name: string): string {
@@ -210,8 +211,11 @@ export function MahsulotlarPage({ employees }: { employees: Employee[] }) {
                   </div>
                 </div>
 
-                <div className="mt-1.5 text-[11.5px]" style={{ color: "var(--ink-faint)" }}>
-                  Berilgan: {formatTashkentDateTime(entry.createdAt)}
+                <div className="mt-1.5 flex items-center gap-1.5">
+                  <span className="text-[11.5px]" style={{ color: "var(--ink-faint)" }}>
+                    Berilgan: {formatTashkentDateTime(entry.createdAt)}
+                  </span>
+                  <SourceTag source={entry.source} />
                 </div>
 
                 <div className="mt-3 space-y-1.5">

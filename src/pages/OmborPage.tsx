@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { api } from "../lib/api";
-import type { Material } from "../lib/types";
+import type { Employee, Material } from "../lib/types";
 import { MaterialStockModal } from "../components/MaterialStockModal";
 import { MaterialHistoryModal } from "../components/MaterialHistoryModal";
 import { IconPlus, IconTrash } from "../components/icons";
 
-export function OmborPage() {
+export function OmborPage({ employees }: { employees: Employee[] }) {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -25,13 +25,13 @@ export function OmborPage() {
     load();
   }, []);
 
-  async function handleAddStock(materialId: string, addQuantity: number) {
-    await api.addMaterialStock(materialId, addQuantity);
+  async function handleAddStock(materialId: string, addQuantity: number, actor: string) {
+    await api.addMaterialStock(materialId, addQuantity, actor);
     setModalOpen(false);
     load();
   }
 
-  async function handleCreate(input: { name: string; unit: string; initialQuantity: number }) {
+  async function handleCreate(input: { name: string; unit: string; initialQuantity: number; actor: string }) {
     await api.createMaterial(input);
     setModalOpen(false);
     load();
@@ -120,6 +120,7 @@ export function OmborPage() {
       {modalOpen && (
         <MaterialStockModal
           materials={materials}
+          employees={employees}
           onClose={() => setModalOpen(false)}
           onAddStock={handleAddStock}
           onCreate={handleCreate}
@@ -127,7 +128,7 @@ export function OmborPage() {
       )}
 
       {historyMaterial && (
-        <MaterialHistoryModal material={historyMaterial} onClose={() => setHistoryMaterial(null)} />
+        <MaterialHistoryModal material={historyMaterial} employees={employees} onClose={() => setHistoryMaterial(null)} />
       )}
     </div>
   );

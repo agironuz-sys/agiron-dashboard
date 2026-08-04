@@ -126,7 +126,7 @@ function App() {
       ) : activeTab === "products" ? (
         <MahsulotlarPage employees={employees} />
       ) : activeTab === "warehouse" ? (
-        <OmborPage />
+        <OmborPage employees={employees} />
       ) : (
         <JamoaPage
           employees={employees}

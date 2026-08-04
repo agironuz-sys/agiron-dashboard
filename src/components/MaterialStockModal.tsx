@@ -1,19 +1,21 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
-import type { Material } from "../lib/types";
+import type { Employee, Material } from "../lib/types";
 import { IconClose } from "./icons";
 import { ToggleSwitch } from "./ToggleSwitch";
 
 export function MaterialStockModal({
   materials,
+  employees,
   onClose,
   onAddStock,
   onCreate,
 }: {
   materials: Material[];
+  employees: Employee[];
   onClose: () => void;
-  onAddStock: (materialId: string, addQuantity: number) => void;
-  onCreate: (input: { name: string; unit: string; initialQuantity: number }) => void;
+  onAddStock: (materialId: string, addQuantity: number, actor: string) => void;
+  onCreate: (input: { name: string; unit: string; initialQuantity: number; actor: string }) => void;
 }) {
   const hasMaterials = materials.length > 0;
   const [mode, setMode] = useState<"existing" | "new">(hasMaterials ? "existing" : "new");
@@ -22,14 +24,15 @@ export function MaterialStockModal({
   const [name, setName] = useState("");
   const [unit, setUnit] = useState("");
   const [initialQuantity, setInitialQuantity] = useState("");
+  const [actor, setActor] = useState(employees[0]?.id || "");
 
   function handleSubmit() {
     if (mode === "existing") {
       if (!materialId) return;
-      onAddStock(materialId, Number(addQuantity) || 0);
+      onAddStock(materialId, Number(addQuantity) || 0, actor);
     } else {
       if (!name.trim() || !unit.trim()) return;
-      onCreate({ name: name.trim(), unit: unit.trim(), initialQuantity: Number(initialQuantity) || 0 });
+      onCreate({ name: name.trim(), unit: unit.trim(), initialQuantity: Number(initialQuantity) || 0, actor });
     }
   }
 
@@ -118,6 +121,23 @@ export function MaterialStockModal({
               </Field>
             </div>
           </>
+        )}
+
+        {employees.length > 0 && (
+          <Field label="Kim tomonidan">
+            <select
+              value={actor}
+              onChange={(e) => setActor(e.target.value)}
+              className="w-full rounded-lg border px-3 py-2 text-[13.5px] outline-none"
+              style={{ borderColor: "var(--border)", background: "var(--bg)", color: "var(--ink)" }}
+            >
+              {employees.map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.name}
+                </option>
+              ))}
+            </select>
+          </Field>
         )}
 
         <button

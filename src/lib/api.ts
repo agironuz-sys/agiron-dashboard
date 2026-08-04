@@ -97,10 +97,10 @@ export const api = {
   deleteTask: (taskId: string) => del(`/api/tasks/${taskId}`),
 
   getMaterials: () => getJson<Material[]>("/api/materials"),
-  createMaterial: (input: { name: string; unit: string; initialQuantity: number }) =>
+  createMaterial: (input: { name: string; unit: string; initialQuantity: number; actor?: string }) =>
     postJson<Material>("/api/materials", input),
-  addMaterialStock: (materialId: string, addQuantity: number) =>
-    patchJson<Material>(`/api/materials/${materialId}`, { addQuantity }),
+  addMaterialStock: (materialId: string, addQuantity: number, actor?: string) =>
+    patchJson<Material>(`/api/materials/${materialId}`, { addQuantity, actor }),
   getMaterialMovements: (materialId: string) => getJson<MaterialMovement[]>(`/api/materials/${materialId}/movements`),
   deleteMaterial: (materialId: string) => del(`/api/materials/${materialId}`),
 

@@ -3,13 +3,13 @@ import type { ChecklistItem, Employee, Task, TaskStatus } from "../lib/types";
 import { StatusBadge } from "./StatusBadge";
 import { TaskEditModal } from "./TaskEditModal";
 import { IconCalendar, IconClose, IconEdit, IconTrash } from "./icons";
+import { formatTashkentDateTime } from "../lib/format";
 
-function formatDate(iso: string): string {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("uz-UZ", { day: "2-digit", month: "2-digit", year: "numeric" });
-}
+const TASK_SOURCE_LABEL: Record<Task["source"], string> = {
+  voice: "🎙 Bot orqali (ovozli)",
+  text: "🤖 Bot orqali",
+  dashboard: "💻 Dashboarddan",
+};
 
 function initials(name: string): string {
   return name
@@ -123,12 +123,20 @@ export function TaskCard({
             <IconCalendar /> {task.deadlineDisplay || "Muddatsiz"}
           </span>
           <span className="text-[11.5px]" style={{ color: "var(--ink-faint)" }}>
-            Berilgan: {formatDate(task.createdAt)}
+            Berilgan: {formatTashkentDateTime(task.createdAt)}
           </span>
         </div>
 
-        <div className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
-          <span style={{ color: "var(--ink-faint)" }}>{createdByName}</span> → {assigneeName}
+        <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[12px]" style={{ color: "var(--ink-soft)" }}>
+          <span>
+            <span style={{ color: "var(--ink-faint)" }}>{createdByName}</span> → {assigneeName}
+          </span>
+          <span
+            className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-medium"
+            style={{ background: "var(--surface-2)", color: "var(--ink-soft)" }}
+          >
+            {TASK_SOURCE_LABEL[task.source]}
+          </span>
         </div>
 
         <div className="mt-4 space-y-1.5">
