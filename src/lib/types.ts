@@ -4,6 +4,7 @@ export interface Employee {
   telegramChatId: string;
   role: string;
   responsibilities: string;
+  inviteToken: string;
 }
 
 export type TaskStatus = "new" | "in_progress" | "done" | "overdue";

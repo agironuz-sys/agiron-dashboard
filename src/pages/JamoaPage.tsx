@@ -19,8 +19,8 @@ export function JamoaPage({
   onDelete,
 }: {
   employees: Employee[];
-  onCreate: (input: { name: string; role: string; responsibilities: string; telegramChatId?: string }) => void;
-  onUpdate: (id: string, input: { name: string; role: string; responsibilities: string; telegramChatId?: string }) => void;
+  onCreate: (input: { name: string; role: string; responsibilities: string }) => void;
+  onUpdate: (id: string, input: { name: string; role: string; responsibilities: string }) => void;
   onDelete: (id: string) => void;
 }) {
   const [modal, setModal] = useState<{ open: boolean; employee: Employee | null }>({ open: false, employee: null });
