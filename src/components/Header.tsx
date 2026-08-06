@@ -6,6 +6,7 @@ const PAGE_TITLES: Record<string, string> = {
   products: "Mahsulotlar",
   warehouse: "Ombor",
   team: "Jamoa",
+  files: "Fayllar",
 };
 
 export function Header({

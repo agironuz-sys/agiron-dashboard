@@ -1,6 +1,8 @@
 import type {
+  Attachment,
   ChecklistItem,
   Employee,
+  FileRecord,
   Material,
   MaterialMovement,
   ProductionEntry,
@@ -58,6 +60,7 @@ export interface TaskCreateInput {
   description: string;
   deadlineIso?: string;
   deadlineDisplay?: string;
+  attachments?: Attachment[];
 }
 
 export interface TaskPatch {
@@ -67,6 +70,7 @@ export interface TaskPatch {
   deadlineDisplay?: string;
   status?: TaskStatus;
   checklist?: ChecklistItem[];
+  attachments?: Attachment[];
 }
 
 export interface ProductionEntryInput {
@@ -112,4 +116,9 @@ export const api = {
   getProduction: () => getJson<ProductionEntry[]>("/api/production"),
   createProduction: (input: ProductionEntryInput) => postJson<ProductionEntry>("/api/production", input),
   deleteProduction: (id: string) => del(`/api/production/${id}`),
+
+  getFiles: () => getJson<FileRecord[]>("/api/files"),
+  createFile: (input: { name: string; url: string; contentType: string; uploadedBy: string }) =>
+    postJson<FileRecord>("/api/files", input),
+  deleteFile: (id: string) => del(`/api/files/${id}`),
 };

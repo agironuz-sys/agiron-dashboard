@@ -33,6 +33,7 @@ export interface Task {
   eveningCheckedAt: string;
   source: "voice" | "text" | "dashboard";
   checklist: ChecklistItem[];
+  attachments: Attachment[];
 }
 
 export interface ReportRow {
@@ -75,6 +76,17 @@ export interface ProductRecipe {
 export interface Attachment {
   url: string;
   name: string;
+}
+
+export interface FileRecord {
+  id: string;
+  fileNumber: number;
+  name: string;
+  url: string;
+  contentType: string;
+  uploadedBy: string;
+  source: ActivitySource;
+  createdAt: string;
 }
 
 export interface ProductionEntry {

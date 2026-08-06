@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { ChecklistItem, Employee, Task, TaskStatus } from "../lib/types";
+import type { Attachment, ChecklistItem, Employee, Task, TaskStatus } from "../lib/types";
 import { TaskCard } from "../components/TaskCard";
 import { TaskCreateModal } from "../components/TaskCreateModal";
 import { IconPlus } from "../components/icons";
@@ -33,6 +33,7 @@ export function VazifalarPage({
     description: string;
     deadlineIso: string;
     deadlineDisplay: string;
+    attachments: Attachment[];
   }) => void;
 }) {
   const [filter, setFilter] = useState<string>("all");

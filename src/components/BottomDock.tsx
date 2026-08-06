@@ -72,6 +72,16 @@ const ITEMS: DockItem[] = [
       </svg>
     ),
   },
+  {
+    key: "files",
+    label: "Fayllar",
+    icon: (
+      <svg {...ICON_PROPS}>
+        <path d="M6 2.5h8l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 20V4a1.5 1.5 0 0 1 1.5-1.5Z" />
+        <path d="M14 2.5V7h4" />
+      </svg>
+    ),
+  },
 ];
 
 export function BottomDock({ active, onChange }: { active: string; onChange: (key: string) => void }) {

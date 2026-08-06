@@ -6,13 +6,14 @@ import { VazifalarPage } from "./pages/VazifalarPage";
 import { MahsulotlarPage } from "./pages/MahsulotlarPage";
 import { OmborPage } from "./pages/OmborPage";
 import { JamoaPage } from "./pages/JamoaPage";
+import { FayllarPage } from "./pages/FayllarPage";
 import { api } from "./lib/api";
 import type { EmployeeInput } from "./lib/api";
-import type { ChecklistItem, Employee, Task, TaskStatus } from "./lib/types";
+import type { Attachment, ChecklistItem, Employee, Task, TaskStatus } from "./lib/types";
 
 type Theme = "light" | "dark";
 
-const VALID_TABS = ["dashboard", "tasks", "products", "warehouse", "team"];
+const VALID_TABS = ["dashboard", "tasks", "products", "warehouse", "team", "files"];
 
 function App() {
   const [activeTab, setActiveTabState] = useState(() => {
@@ -99,6 +100,7 @@ function App() {
     description: string;
     deadlineIso: string;
     deadlineDisplay: string;
+    attachments?: Attachment[];
   }) {
     const task = await api.createTask(input);
     setTasks((prev) => [task, ...prev]);
@@ -146,13 +148,15 @@ function App() {
         <MahsulotlarPage employees={employees} />
       ) : activeTab === "warehouse" ? (
         <OmborPage employees={employees} />
-      ) : (
+      ) : activeTab === "team" ? (
         <JamoaPage
           employees={employees}
           onCreate={handleEmployeeCreate}
           onUpdate={handleEmployeeUpdate}
           onDelete={handleEmployeeDelete}
         />
+      ) : (
+        <FayllarPage employees={employees} />
       )}
 
       <BottomDock active={activeTab} onChange={setActiveTab} />

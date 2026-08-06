@@ -57,6 +57,15 @@ export function IconClose({ size = 14, className }: IconProps) {
   );
 }
 
+export function IconFile({ size = 15, className }: IconProps) {
+  return (
+    <svg {...BASE} width={size} height={size} className={className}>
+      <path d="M6 2.5h8l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 20V4a1.5 1.5 0 0 1 1.5-1.5Z" />
+      <path d="M14 2.5V7h4" />
+    </svg>
+  );
+}
+
 export function IconUsers({ size = 15, className }: IconProps) {
   return (
     <svg {...BASE} width={size} height={size} className={className}>

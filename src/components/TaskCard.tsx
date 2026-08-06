@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { ChecklistItem, Employee, Task, TaskStatus } from "../lib/types";
 import { StatusBadge } from "./StatusBadge";
 import { TaskEditModal } from "./TaskEditModal";
-import { IconCalendar, IconClose, IconEdit, IconTrash } from "./icons";
+import { IconCalendar, IconClose, IconEdit, IconFile, IconTrash } from "./icons";
 import { formatTashkentDateTime } from "../lib/format";
 
 const TASK_SOURCE_LABEL: Record<Task["source"], string> = {
@@ -138,6 +138,23 @@ export function TaskCard({
             {TASK_SOURCE_LABEL[task.source]}
           </span>
         </div>
+
+        {task.attachments.length > 0 && (
+          <div className="mt-2.5 space-y-1">
+            {task.attachments.map((a, i) => (
+              <a
+                key={i}
+                href={a.url}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 text-[12px] underline"
+                style={{ color: "var(--accent)" }}
+              >
+                <IconFile size={12} /> {a.name}
+              </a>
+            ))}
+          </div>
+        )}
 
         <div className="mt-4 space-y-1.5">
           {checklist.map((item, i) => (

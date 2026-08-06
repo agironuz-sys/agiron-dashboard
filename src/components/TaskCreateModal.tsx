@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import type { Employee } from "../lib/types";
+import { api } from "../lib/api";
+import type { Attachment, Employee, FileRecord } from "../lib/types";
 import { IconClose } from "./icons";
 
 export function TaskCreateModal({
@@ -16,6 +17,7 @@ export function TaskCreateModal({
     description: string;
     deadlineIso: string;
     deadlineDisplay: string;
+    attachments: Attachment[];
   }) => void;
 }) {
   const [description, setDescription] = useState("");
@@ -23,6 +25,12 @@ export function TaskCreateModal({
   const [assigneeId, setAssigneeId] = useState(employees[0]?.id || "");
   const [dateInput, setDateInput] = useState("");
   const [timeInput, setTimeInput] = useState("18:00");
+  const [files, setFiles] = useState<FileRecord[]>([]);
+  const [fileId, setFileId] = useState("");
+
+  useEffect(() => {
+    api.getFiles().then(setFiles).catch(() => {});
+  }, []);
 
   function handleSave() {
     if (!description.trim() || !assigneeId) return;
@@ -36,7 +44,15 @@ export function TaskCreateModal({
         year: "numeric",
       })}, ${timeInput || "18:00"}`;
     }
-    onSave({ createdBy, assigneeId, description: description.trim(), deadlineIso, deadlineDisplay });
+    const file = files.find((f) => f.id === fileId);
+    onSave({
+      createdBy,
+      assigneeId,
+      description: description.trim(),
+      deadlineIso,
+      deadlineDisplay,
+      attachments: file ? [{ url: file.url, name: file.name }] : [],
+    });
   }
 
   return (
@@ -104,6 +120,26 @@ export function TaskCreateModal({
             />
           </Field>
         </div>
+
+        {files.length > 0 && (
+          <div className="mt-3">
+            <Field label="Fayl biriktirish (ixtiyoriy)">
+              <select
+                value={fileId}
+                onChange={(e) => setFileId(e.target.value)}
+                className="w-full rounded-lg border px-3 py-2 text-[13.5px] outline-none"
+                style={{ borderColor: "var(--border)", background: "var(--bg)", color: "var(--ink)" }}
+              >
+                <option value="">— Yo'q —</option>
+                {files.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    #{f.fileNumber} — {f.name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+        )}
 
         <div className="mt-3">
           <Field label="Kim tomonidan">
