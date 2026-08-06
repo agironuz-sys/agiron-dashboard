@@ -72,6 +72,11 @@ export interface ProductRecipe {
   updatedAt: string;
 }
 
+export interface Attachment {
+  url: string;
+  name: string;
+}
+
 export interface ProductionEntry {
   id: string;
   productName: string;
