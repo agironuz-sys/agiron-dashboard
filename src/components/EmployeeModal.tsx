@@ -18,19 +18,20 @@ export function EmployeeModal({
   const [name, setName] = useState(employee?.name || "");
   const [role, setRole] = useState(employee?.role || "");
   const [responsibilities, setResponsibilities] = useState(employee?.responsibilities || "");
-  const [copied, setCopied] = useState(false);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  const inviteLink = employee ? `https://t.me/${BOSS_BOT_USERNAME}?start=${employee.inviteToken}` : "";
+  const bossLink = employee ? `https://t.me/${BOSS_BOT_USERNAME}?start=${employee.inviteToken}` : "";
+  const notifyLink = employee ? `https://t.me/${NOTIFY_BOT_USERNAME}?start=${employee.inviteToken}` : "";
 
   function handleSave() {
     if (!name.trim() || !role.trim()) return;
     onSave({ name: name.trim(), role: role.trim(), responsibilities: responsibilities.trim() });
   }
 
-  function handleCopy() {
-    navigator.clipboard.writeText(inviteLink).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+  function handleCopy(key: string, link: string) {
+    navigator.clipboard.writeText(link).then(() => {
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 1500);
     });
   }
 
@@ -82,90 +83,37 @@ export function EmployeeModal({
         </Field>
 
         {employee && (
-          <Field label="Botga ulanish">
-            <div
-              className="rounded-lg border p-3"
-              style={{ borderColor: "var(--border)", background: "var(--bg)" }}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className="rounded-full px-2.5 py-1 text-[11px] font-medium"
-                  style={{
-                    background: employee.telegramChatId ? "var(--success-soft)" : "var(--surface-2)",
-                    color: employee.telegramChatId ? "var(--success)" : "var(--ink-faint)",
-                  }}
-                >
-                  {employee.telegramChatId ? "Ulangan" : "Hali ulanmagan"}
-                </span>
-              </div>
+          <Field label="Botlarga ulanish">
+            <div className="space-y-2">
+              <p className="text-[12px]" style={{ color: "var(--ink-soft)" }}>
+                Ikkalasi ham mustaqil — istalgan tartibda, faqat kerakli havolani bosish yetarli. Hech narsani
+                qo'lda ko'chirib yuborish shart emas.
+              </p>
 
-              {employee.id === "gayrat" && employee.telegramChatId ? (
-                <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
-                  🔒 Rahbar profili allaqachon ulangan. Xavfsizlik uchun havola faqat bir marta ishlaydi va
-                  qayta ishlatib bo'lmaydi — hatto kimdir uni topib olsa ham, rahbar huquqini ololmaydi. Qayta
-                  ulash kerak bo'lsa (masalan, telefon almashtirilganda), dasturchiga murojaat qiling.
+              {employee.id === "gayrat" && employee.telegramChatId && employee.notifyConnected ? (
+                <p className="mt-1 text-[12px]" style={{ color: "var(--ink-soft)" }}>
+                  🔒 Rahbar profili allaqachon ulangan. Xavfsizlik uchun havolalar faqat bir marta ishlaydi.
+                  Qayta ulash kerak bo'lsa (masalan, telefon almashtirilganda), dasturchiga murojaat qiling.
                 </p>
               ) : (
                 <>
-                  <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
-                    Bu shaxsiy havolani {employee.name}ga yuboring — u havolani ochib botni bossagina, tizim uni
-                    avtomatik tanib oladi, hech narsa nusxalab yuborish shart emas.
-                  </p>
-                  <div className="mt-2 flex items-center gap-2">
-                    <div
-                      className="min-w-0 flex-1 truncate rounded-lg border px-2.5 py-1.5 text-[12px]"
-                      style={{ borderColor: "var(--border)", background: "var(--surface)", color: "var(--ink)" }}
-                    >
-                      {inviteLink}
-                    </div>
-                    <button
-                      onClick={handleCopy}
-                      className="font-heading shrink-0 rounded-lg px-3 py-1.5 text-[12px] font-semibold text-white"
-                      style={{ background: "var(--accent)" }}
-                    >
-                      {copied ? "Nusxalandi!" : "Nusxalash"}
-                    </button>
-                  </div>
+                  <ConnectRow
+                    label="Asosiy bot"
+                    hint="vazifalar, ombor, ishlab chiqarish"
+                    connected={!!employee.telegramChatId}
+                    link={bossLink}
+                    copied={copiedKey === "boss"}
+                    onCopy={() => handleCopy("boss", bossLink)}
+                  />
+                  <ConnectRow
+                    label="Eslatma bot"
+                    hint="bildirishnoma va eslatmalar"
+                    connected={employee.notifyConnected}
+                    link={notifyLink}
+                    copied={copiedKey === "notify"}
+                    onCopy={() => handleCopy("notify", notifyLink)}
+                  />
                 </>
-              )}
-            </div>
-          </Field>
-        )}
-
-        {employee && (
-          <Field label="Eslatma bot (bildirishnomalar)">
-            <div className="rounded-lg border p-3" style={{ borderColor: "var(--border)", background: "var(--bg)" }}>
-              <span
-                className="rounded-full px-2.5 py-1 text-[11px] font-medium"
-                style={{
-                  background: employee.notifyConnected ? "var(--success-soft)" : "var(--surface-2)",
-                  color: employee.notifyConnected ? "var(--success)" : "var(--ink-faint)",
-                }}
-              >
-                {employee.notifyConnected ? "Ulangan" : "Hali ulanmagan"}
-              </span>
-
-              {!employee.telegramChatId ? (
-                <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
-                  Avval yuqoridagi asosiy botga ulaning — bu bot xodimni faqat shundan keyin taniydi.
-                </p>
-              ) : !employee.notifyConnected ? (
-                <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
-                  Yangi topshiriq va kunlik eslatmalar shu bot orqali keladi — lekin Telegram qoidasiga ko'ra bot
-                  birinchi bo'lib yozolmaydi. {employee.name} <a
-                    href={`https://t.me/${NOTIFY_BOT_USERNAME}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-medium underline"
-                    style={{ color: "var(--accent)" }}
-                  >
-                    @{NOTIFY_BOT_USERNAME}
-                  </a> ni ochib, bir marta Start bosishi kerak.
-                </p>
-              ) : (
-                <p className="mt-2 text-[12px]" style={{ color: "var(--ink-soft)" }}>
-                  Yangi topshiriqlar, kunlik eslatmalar va muddat o'tganda ogohlantirish shu botdan keladi.
-                </p>
               )}
             </div>
           </Field>
@@ -190,6 +138,64 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
         {label}
       </div>
       {children}
+    </div>
+  );
+}
+
+function ConnectRow({
+  label,
+  hint,
+  connected,
+  link,
+  copied,
+  onCopy,
+}: {
+  label: string;
+  hint: string;
+  connected: boolean;
+  link: string;
+  copied: boolean;
+  onCopy: () => void;
+}) {
+  return (
+    <div className="rounded-lg border p-3" style={{ borderColor: "var(--border)", background: "var(--bg)" }}>
+      <div className="flex items-center justify-between gap-2">
+        <div>
+          <span className="text-[12.5px] font-medium" style={{ color: "var(--ink)" }}>
+            {label}
+          </span>
+          <span className="ml-1.5 text-[11px]" style={{ color: "var(--ink-faint)" }}>
+            {hint}
+          </span>
+        </div>
+        <span
+          className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium"
+          style={{
+            background: connected ? "var(--success-soft)" : "var(--surface-2)",
+            color: connected ? "var(--success)" : "var(--ink-faint)",
+          }}
+        >
+          {connected ? "Ulangan" : "Hali ulanmagan"}
+        </span>
+      </div>
+
+      {!connected && (
+        <div className="mt-2 flex items-center gap-2">
+          <div
+            className="min-w-0 flex-1 truncate rounded-lg border px-2.5 py-1.5 text-[12px]"
+            style={{ borderColor: "var(--border)", background: "var(--surface)", color: "var(--ink)" }}
+          >
+            {link}
+          </div>
+          <button
+            onClick={onCopy}
+            className="font-heading shrink-0 rounded-lg px-3 py-1.5 text-[12px] font-semibold text-white"
+            style={{ background: "var(--accent)" }}
+          >
+            {copied ? "Nusxalandi!" : "Nusxalash"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
