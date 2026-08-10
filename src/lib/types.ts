@@ -28,7 +28,9 @@ export interface Task {
   deadlineDisplay: string;
   status: TaskStatus;
   completedAt: string;
-  lastReminderAt: string;
+  reminder5hAt: string;
+  reminder1hAt: string;
+  overdueNotifiedAt: string;
   morningNotifiedAt: string;
   eveningCheckedAt: string;
   source: "voice" | "text" | "dashboard";
